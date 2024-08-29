@@ -1,0 +1,32 @@
+-- Crear base de datos llamada 'tesis'
+CREATE DATABASE tesis;
+
+-- Usar la base de datos 'tesis'
+USE tesis;
+
+-- Crear la tabla 'asesores'
+CREATE TABLE asesores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    numero_de_cuenta VARCHAR(50) NOT NULL,
+    contrasena VARCHAR(255) NOT NULL
+);
+
+-- Insertar registros en la tabla 'asesores'
+INSERT INTO asesores (nombre, numero_de_cuenta, contrasena) VALUES 
+('isaacdeluxe', '20181040', 'porfiriodiaz'),
+('porfirio', '20181040', 'porfiriodiaz'),
+('porfiriodiazdeluxe', '20181040', '1234');
+
+-- Crear la tabla 'tesis'
+CREATE TABLE tesis (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulotesis VARCHAR(255) NOT NULL,
+    autores VARCHAR(255) NOT NULL,
+    version INT DEFAULT 0,
+    archivo_pdf BLOB
+);
+
+-- Insertar registros en la tabla 'tesis'
+INSERT INTO tesis (titulotesis, autores, version) VALUES 
+('IA', 'pabloyyo', 0);
