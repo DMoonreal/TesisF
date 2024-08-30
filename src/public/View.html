@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualizar Tesis</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      #pdfViewer {
+        width: 100%;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">Visualizar Tesis</h1>
+      <div id="pdfViewer"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js"></script>
+    <script>
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const pdfUrl = urlParams.get("pdf");
+
+      if (pdfUrl) {
+        const loadingTask = pdfjsLib.getDocument(pdfUrl);
+        loadingTask.promise.then(
+          function (pdf) {
+            pdf.getPage(1).then(function (page) {
+              const scale = 1.5;
+              const viewport = page.getViewport({ scale: scale });
+              const canvas = document.createElement("canvas");
+              const context = canvas.getContext("2d");
+              canvas.height = viewport.height;
+              canvas.width = viewport.width;
+              const renderContext = {
+                canvasContext: context,
+                viewport: viewport,
+              };
+              page.render(renderContext).promise.then(function () {
+                document.getElementById("pdfViewer").appendChild(canvas);
+              });
+            });
+          },
+          function (reason) {
+            console.error("Error: " + reason);
+          }
+        );
+      } else {
+        console.error("No se ha proporcionado un archivo PDF para visualizar.");
+      }
+    </script>
+  </body>
+</html>

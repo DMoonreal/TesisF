@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Tesis</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">Editar Tesis</h1>
+      <form id="editThesisForm">
+        <input type="hidden" id="editThesisId" value="<%= tesis.id %>" />
+        <div class="form-group">
+          <label for="editThesisTitle">Título de la Tesis</label>
+          <input
+            type="text"
+            class="form-control"
+            id="editThesisTitle"
+            value="Titulo de la tesis"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="editThesisAuthors">Autores</label>
+          <input
+            type="text"
+            class="form-control"
+            id="editThesisAuthors"
+            value="Nombre de los Autores"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="editThesisVersion">Versión</label>
+          <input
+            type="text"
+            class="form-control"
+            id="editThesisVersion"
+            value="Version Editada"
+            required
+          />
+        </div>
+
+        <!-- Sección de Capítulos -->
+        <h2 class="mt-4">Capítulos</h2>
+        <div id="chapters">
+          <div class="form-group">
+            <label for="chapter">Capítulo </label>
+            <textarea class="form-control" id="chapter" rows="5"></textarea>
+            <div class="mt-2">
+              <button
+                type="button"
+                class="btn btn-info btn-sm"
+                onclick="improveWithAI()"
+              >
+                Mejorar con IA
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                onclick="createWithAI()"
+              >
+                Crear con IA
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <a href="/" class="btn btn-secondary">Cancelar</a>
+      </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      function improveWithAI(index) {
+        alert("Mejorando capítulo " + (index + 1) + " con IA");
+        // Lógica para mejorar con IA
+      }
+
+      function createWithAI(index) {
+        alert("Creando capítulo " + (index + 1) + " con IA");
+        // Lógica para crear con IA
+      }
+    </script>
+  </body>
+</html>

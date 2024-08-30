@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabla de Tesis</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <style>
+    #tesis1 {
+      display: none;
+    }
+  </style>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">Lista de Tesis</h1>
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>Nombre de la Tesis</th>
+            <th>Alumnos</th>
+            <th>Versión</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="tesis1">
+            <td>Tesis 1</td>
+            <td>Alumno A, Alumno B</td>
+            <td>1.0</td>
+            <td>
+              <button class="btn btn-info btn-sm" onclick="viewThesis(1)">
+                Visualizar
+              </button>
+              <button class="btn btn-warning btn-sm" onclick="editThesis(1)">
+                Editar
+              </button>
+              <button
+                class="btn btn-danger btn-sm"
+                data-toggle="modal"
+                data-target="#deleteThesisModal"
+                onclick="deleteThesis(1)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>Tesis 2</td>
+            <td>Alumno C, Alumno D</td>
+            <td>1.1</td>
+            <td>
+              <button class="btn btn-info btn-sm" onclick="viewThesis(2)">
+                Visualizar
+              </button>
+              <button class="btn btn-warning btn-sm" onclick="editThesis(2)">
+                Editar
+              </button>
+              <button
+                class="btn btn-danger btn-sm"
+                data-toggle="modal"
+                data-target="#deleteThesisModal"
+                onclick="deleteThesis(2)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>Tesis 3</td>
+            <td>Alumno E, Alumno F</td>
+            <td>1.2</td>
+            <td>
+              <button class="btn btn-info btn-sm" onclick="viewThesis(3)">
+                Visualizar
+              </button>
+              <button class="btn btn-warning btn-sm" onclick="editThesis(3)">
+                Editar
+              </button>
+              <button
+                class="btn btn-danger btn-sm"
+                data-toggle="modal"
+                data-target="#deleteThesisModal"
+                onclick="deleteThesis(3)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>Tesis 4</td>
+            <td>Alumno G, Alumno H</td>
+            <td>1.3</td>
+            <td>
+              <button class="btn btn-info btn-sm" onclick="viewThesis(4)">
+                Visualizar
+              </button>
+              <button class="btn btn-warning btn-sm" onclick="editThesis(4)">
+                Editar
+              </button>
+              <button
+                class="btn btn-danger btn-sm"
+                data-toggle="modal"
+                data-target="#deleteThesisModal"
+                onclick="deleteThesis(4)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>Tesis 5</td>
+            <td>Alumno I, Alumno J</td>
+            <td>1.4</td>
+            <td>
+              <button class="btn btn-info btn-sm" onclick="viewThesis(5)">
+                Visualizar
+              </button>
+              <button class="btn btn-warning btn-sm" onclick="editThesis(5)">
+                Editar
+              </button>
+              <button
+                class="btn btn-danger btn-sm"
+                data-toggle="modal"
+                data-target="#deleteThesisModal"
+                onclick="deleteThesis(5)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+          <tr id="tesis5">
+            <td>tesis6</td>
+            <td>Porfirio Jaime y Isaac Ponce</td>
+            <td>0</td>
+            <td>
+              <button class="btn btn-info btn-sm" onclick="viewThesis(5)">
+                Visualizar
+              </button>
+              <button class="btn btn-warning btn-sm" onclick="editThesis(5)">
+                Editar
+              </button>
+              <button
+                class="btn btn-danger btn-sm"
+                data-toggle="modal"
+                data-target="#deleteThesisModal"
+                onclick="deleteThesis(5)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button onclick="Ola3()">Agregar Tesis</button>
+    </div>
+
+    <!-- Modal para Confirmar Eliminación de Tesis -->
+    <div
+      class="modal fade"
+      id="deleteThesisModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="deleteThesisModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteThesisModalLabel">
+              Eliminar Tesis
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>¿Estás seguro de que quieres eliminar esta tesis?</p>
+            <p id="deleteThesisInfo"></p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-dismiss="modal"
+              onclick="pp()"
+            >
+              Eliminar
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="pp()">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      function pp() {
+        window.location.href("PaginaP.html");
+      }
+      function viewThesis(id) {
+        window.location.href = "View.html";
+      }
+
+      function editThesis(id) {
+        window.location.href = "Edit.html";
+      }
+
+      function deleteThesis(id) {
+        document.getElementById("deleteThesisInfo").textContent =
+          "ID de la Tesis: " + id;
+      }
+      function Ola3() {
+        document.getElementById("tesis5").style.display = "table-row";
+        window.location.href = "AñardirTesis.html";
+      }
+    </script>
+  </body>
+</html>

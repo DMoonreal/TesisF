@@ -15,9 +15,8 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //Rutas
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./public/index.html"));
-});
+app.use("/", express.static(__dirname + "/public"));
+app.use("/PaginaP", express.static(__dirname + "/public/PaginaP.html"));
 app.use("/api/asesores", asesores);
 app.use("/api/tesis", tesis);
 module.exports = app;

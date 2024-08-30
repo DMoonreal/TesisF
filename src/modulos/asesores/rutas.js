@@ -2,11 +2,13 @@ const express = require("express");
 const respuesta = require("../../red/respuestas.js");
 const controlador = require("./index.js");
 const router = express.Router();
+const path = require("path");
 
 router.get("/", todos);
 router.get("/:id", uno);
 router.put("/", eliminar);
 router.post("/", agregar);
+
 async function todos(req, res) {
   try {
     const items = await controlador.todos();
@@ -15,10 +17,11 @@ async function todos(req, res) {
     respuesta.error(req, res, err, 500);
   }
 }
+
 async function uno(req, res) {
   try {
     const items = await controlador.uno(req.params.id);
-    respuesta.sucess(req, res, items, 200);
+    res.redirect("/PaginaP");
   } catch (err) {
     respuesta.error(req, res, err, 500);
   }
@@ -38,9 +41,9 @@ async function agregar(req, res) {
     if (req.body.id == 0) {
       mensaje = "Asesor Agregado con Exito";
     } else mensaje = "Asesor Actualizado";
-    respuesta.sucess(req, res, mensaje, 201);
+    res.redirect("/");
   } catch (err) {
-    respuesta.error(req, res, err, 500);
+    res.redirect("/");
   }
 }
 
