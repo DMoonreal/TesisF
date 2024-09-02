@@ -41,20 +41,11 @@ function uno(tabla, id) {
   });
 }
 
-function insertar(tabla, data) {
-  return new Promise((res, req) => {
-    conexion.query(`INSERT INTO ${tabla} SET ?`, data, (err, resultado) => {
-      if (err) {
-        return req(err);
-      } else res(resultado);
-    });
-  });
-}
-function actulizar(tabla, data) {
+function agregar(tabla, data) {
   return new Promise((res, req) => {
     conexion.query(
-      `UPDATE ${tabla}  SET ? WHERE ID=?`,
-      [data, data.id],
+      `INSERT INTO ${tabla} SET ? ON DUPLICATE KEY UPDATE ?`,
+      [data, data],
       (err, resultado) => {
         if (err) {
           return req(err);
@@ -63,12 +54,6 @@ function actulizar(tabla, data) {
     );
   });
 }
-function agregar(tabla, data) {
-  if (data && data.id == 0) {
-    insertar(tabla, data);
-  } else actulizar(tabla, data);
-}
-
 function eliminar(tabla, data) {
   return new Promise((res, req) => {
     conexion.query(

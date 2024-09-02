@@ -21,7 +21,7 @@ async function todos(req, res) {
 async function uno(req, res) {
   try {
     const items = await controlador.uno(req.params.id);
-    res.redirect("/PaginaP");
+    respuesta.sucess(req, res, items, 200);
   } catch (err) {
     respuesta.error(req, res, err, 500);
   }
