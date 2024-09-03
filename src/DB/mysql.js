@@ -40,7 +40,17 @@ function uno(tabla, id) {
     );
   });
 }
-
+function query(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    conexion.query(sql, params, (err, resultado) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(resultado);
+      }
+    });
+  });
+}
 function agregar(tabla, data) {
   return new Promise((res, req) => {
     conexion.query(
@@ -73,4 +83,5 @@ module.exports = {
   uno,
   agregar,
   eliminar,
+  query,
 };

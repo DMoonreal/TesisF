@@ -10,15 +10,23 @@ module.exports = function (dbinyectada) {
   }
 
   async function login(numero_de_cuenta, password) {
-    const data = await db.query(TABLA, { numero_de_cuenta: numero_de_cuenta });
-    if (data && data.length > 0) {
+    // Realiza la consulta para encontrar al usuario por su número de cuenta
+    const data = await db.query(
+      "SELECT * FROM auth WHERE numero_de_cuenta = ?",
+      [numero_de_cuenta]
+    );
+    // Verifica que la consulta haya encontrado algún registro
+    console.log("Resultado de la consulta:", data);
+    if (data) {
       const user = data[0];
-      const validPassword = await bcrypt.compare(password, user.password);
-      if (validPassword) {
-        return true;
+      console.log(user.password);
+      console.log(password);
+      // Compara la contraseña proporcionada con la almacenada en la base de datos
+      if (password == user.password) {
+        return true; // Retorna true si la contraseña es válida
       }
     }
-    // Si llega aquí, es porque las credenciales no son válidas
+    // Lanza un error si las credenciales no son correctas
     throw new Error("Credenciales incorrectas");
   }
 
@@ -30,7 +38,7 @@ module.exports = function (dbinyectada) {
       authData.numero_de_cuenta = data.numero_de_cuenta;
     }
     if (data.password) {
-      authData.password = await bcrypt.hash(data.password, 10); // Hash de la contraseña
+      authData.password = data.password;
     }
     return db.agregar(TABLA, authData);
   }
