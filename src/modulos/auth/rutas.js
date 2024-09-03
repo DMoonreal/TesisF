@@ -8,7 +8,6 @@ async function login(req, res) {
   try {
     const { numero_de_cuenta, password } = req.body; // Cambia a req.body
     const token = await controlador.login(numero_de_cuenta, password);
-    console.log("data");
     if (token) {
       res.redirect("/PaginaP");
     } else {
