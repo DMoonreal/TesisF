@@ -17,8 +17,8 @@
           <div class="card">
             <div class="card-body">
               <h2 class="card-title text-center">Iniciar Sesión</h2>
-              <!-- Form de Incio de Sesion -->
-              <form id="loginForm" action="/login" method="post">
+              <!-- Form de Inicio de Sesion -->
+              <form id="loginForm">
                 <div class="form-group">
                   <label for="numero_de_cuenta">Número de Cuenta:</label>
                   <input
@@ -30,14 +30,33 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label for="password">Contraseña:</label>
+                  <label for="contrasena">Contraseña:</label>
                   <input
                     type="password"
                     class="form-control"
-                    id="password"
-                    name="password"
+                    id="contrasena"
+                    name="contrasena"
                     required
                   />
+                </div>
+                <div class="form-group">
+                  <label>Rol:</label><br />
+                  <input
+                    type="radio"
+                    id="alumno"
+                    name="rol"
+                    value="alumno"
+                    required
+                  />
+                  <label for="alumno">Alumno</label><br />
+                  <input
+                    type="radio"
+                    id="asesor"
+                    name="rol"
+                    value="asesor"
+                    required
+                  />
+                  <label for="asesor">Asesor</label>
                 </div>
                 <!-- Boton submit del Login -->
                 <button type="submit" class="btn btn-primary btn-block">
@@ -57,6 +76,7 @@
       </div>
     </div>
     <!-- Termina el Login -->
+
     <!-- Inicia el Modal de Registro -->
     <div
       class="modal fade"
@@ -83,7 +103,16 @@
             <form action="/api/asesores/" method="post">
               <!-- Campo oculto para enviar el ID con valor 0 -->
               <input type="hidden" id="id" name="id" value="0" />
-
+              <div class="form-group">
+                <label for="numero_cuenta">Número de Cuenta:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="numero_cuenta"
+                  name="numero_cuenta"
+                  required
+                />
+              </div>
               <div class="form-group">
                 <label for="nombre">Nombre:</label>
                 <input
@@ -95,31 +124,51 @@
                 />
               </div>
               <div class="form-group">
-                <label for="numero_de_cuenta">Número de Cuenta:</label>
+                <label for="contrasena">Contraseña:</label>
                 <input
-                  type="text"
+                  type="password"
                   class="form-control"
-                  id="numero_de_cuenta"
-                  name="numero_de_cuenta"
+                  id="contrasena"
+                  name="contrasena"
                   required
                 />
               </div>
               <div class="form-group">
-                <label for="password">password:</label>
+                <label>Rol:</label><br />
                 <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  name="password"
+                  type="radio"
+                  id="alumnoReg"
+                  name="rol"
+                  value="alumno"
                   required
                 />
+                <label for="alumnoReg">Alumno</label><br />
+                <input
+                  type="radio"
+                  id="asesorReg"
+                  name="rol"
+                  value="asesor"
+                  required
+                />
+                <label for="asesorReg">Asesor</label>
               </div>
-              <button
-                type="submit"
-                class="btn btn-primary btn-block"
-                onclick="ola()"
+
+              <!-- Menu desplegable de asesores (solo visible para alumnos en el registro) -->
+              <div
+                class="form-group"
+                id="asesorDropdownReg"
+                style="display: none"
               >
-                Registrarse
+                <label for="asesorSelectReg">Selecciona tu asesor:</label>
+                <select
+                  class="form-control"
+                  id="asesorSelectReg"
+                  name="asesor"
+                ></select>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">
+                Registrarse 2
               </button>
             </form>
           </div>
@@ -127,17 +176,53 @@
       </div>
     </div>
     <!-- Aqui acaba el Modal de Registro -->
-    <!-- Inicia el scripteo -->
     <script>
-      function ola() {
-        console.log("Jalando");
-        window.location.href = "index.html";
-      }
-      function ola2() {
-        console.log("Jalando");
-        window.location.href = "Views/PaginaP.html";
-      }
+      document.addEventListener("DOMContentLoaded", function () {
+        const alumnoRadio = document.getElementById("alumnoReg");
+        const asesorDropdown = document.getElementById("asesorDropdownReg");
+        const asesorSelect = document.getElementById("asesorSelectReg");
+
+        // Función para obtener asesores desde la base de datos
+        async function cargarAsesores() {
+          try {
+            const response = await fetch("/api/asesores"); // Realizar la petición a la API
+            const asesores = await response.json();
+            console.log(asesores);
+            // Limpiar el menú desplegable antes de agregar los asesores
+            asesorSelect.innerHTML = "";
+
+            // Agregar cada asesor al menú desplegable
+            asesores.body.forEach((asesor) => {
+              const option = document.createElement("option");
+              option.value = asesor.numero_cuenta;
+              option.textContent = asesor.nombre;
+              asesorSelect.appendChild(option);
+            });
+          } catch (error) {
+            console.error("Error al cargar los asesores:", error);
+          }
+        }
+
+        // Función para mostrar u ocultar el dropdown de asesores
+        function toggleAsesorDropdown() {
+          if (alumnoRadio.checked) {
+            asesorDropdown.style.display = "block"; // Mostrar dropdown
+            cargarAsesores(); // Llamar la función para cargar los asesores
+          } else {
+            asesorDropdown.style.display = "none"; // Ocultar dropdown
+          }
+        }
+
+        // Escuchar los cambios en los radios del rol
+        document.querySelectorAll('input[name="rol"]').forEach(function (elem) {
+          elem.addEventListener("change", toggleAsesorDropdown);
+        });
+
+        // Ejecutar la función al cargar la página (por si algún radio ya está seleccionado)
+        toggleAsesorDropdown();
+      });
     </script>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -58,6 +58,7 @@ function agregar(tabla, data) {
       [data, data],
       (err, resultado) => {
         if (err) {
+          console.log(err);
           return req(err);
         } else res(resultado);
       }
