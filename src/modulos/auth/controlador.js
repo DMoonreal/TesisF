@@ -1,7 +1,6 @@
 const { error } = require("../../red/respuestas");
-const bcrypt = require("bcrypt");
 
-const TABLA = "auth";
+let TABLA = "asesores";
 
 module.exports = function (dbinyectada) {
   let db = dbinyectada;
@@ -9,20 +8,25 @@ module.exports = function (dbinyectada) {
     db = require("../../DB/mysql");
   }
 
-  async function login(numero_de_cuenta, password) {
+  async function login(numero_de_cuenta, password, rol) {
+    console.log(numero_de_cuenta, password, rol);
+    numero_de_cuenta = parseInt(numero_de_cuenta);
     // Realiza la consulta para encontrar al usuario por su número de cuenta
+    if (rol == "alumno") {
+      TABLA = "alumnos";
+    }
     const data = await db.query(
-      "SELECT * FROM auth WHERE numero_de_cuenta = ?",
+      `SELECT * FROM ${TABLA} WHERE numero_cuenta = ?`,
       [numero_de_cuenta]
     );
     // Verifica que la consulta haya encontrado algún registro
     console.log("Resultado de la consulta:", data);
     if (data) {
       const user = data[0];
-      console.log(user.password);
+      console.log(user.contrasena);
       console.log(password);
       // Compara la contraseña proporcionada con la almacenada en la base de datos
-      if (password == user.password) {
+      if (password == user.contrasena) {
         return true; // Retorna true si la contraseña es válida
       }
     }

@@ -20,7 +20,7 @@ module.exports = function (dbinyectada) {
 
   async function agregar(body) {
     let usuario;
-
+    console.log(body);
     if (body.rol == "alumno") {
       usuario = {
         numero_cuenta: body.numero_cuenta,
@@ -31,6 +31,7 @@ module.exports = function (dbinyectada) {
       TABLA = "alumnos";
     } else if (body.rol == "asesor") {
       console.log("entre asesor");
+      TABLA = "asesores";
       usuario = {
         numero_cuenta: body.numero_cuenta,
         nombre: body.nombre,

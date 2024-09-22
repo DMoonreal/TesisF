@@ -1,135 +1,144 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Solicitar Revisión de Tesis</title>
     <link
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
     />
     <style>
-    body {
+      body {
         font-family: Arial, sans-serif;
-    }
-    #container {
+      }
+      #container {
         margin: 50px auto;
         width: 50%;
         padding: 20px;
         border: 1px solid #000;
         border-radius: 10px;
-    }
-    #back-button {
+      }
+      #back-button {
         position: absolute;
         top: 10px;
         left: 10px;
         cursor: pointer;
-    }
-    .form-group textarea {
+      }
+      .form-group textarea {
         resize: none;
-    }
-    #submit-button {
+      }
+      #submit-button {
         margin-top: 10px;
-    }
-    #view-comments-button {
+      }
+      #view-comments-button {
         margin-top: 10px;
-    }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Botón de regreso -->
     <button id="back-button" class="btn btn-secondary">← Volver</button>
 
     <!-- Contenedor principal -->
     <div id="container" class="container">
-    <h2 class="text-center">Solicitar Revisión de Tesis</h2>
+      <h2 class="text-center">Solicitar Revisión de Tesis</h2>
 
-    <form id="revision-form">
+      <form id="revision-form" action="/api/tesis" method="post">
         <!-- Nombre de la tesis -->
         <div class="form-group">
-        <label for="nombre-tesis" aria-required="true">Titulo de la tesis:</label>
-        <input
+          <label for="nombre-tesis" aria-required="true"
+            >Titulo de la tesis:</label
+          >
+          <input
             type="text"
             class="form-control"
             id="nombre-tesis"
+            name="nombre_tesis"
             placeholder="Introduce el nombre de tu tesis"
             required
-        />
+          />
         </div>
 
         <!-- Notas sobre los avances -->
         <div class="form-group">
-        <label for="notas-avances">Notas sobre los avances:</label>
-        <textarea
+          <label for="notas-avances">Notas sobre los avances:</label>
+          <textarea
             class="form-control"
             id="notas-avances"
             rows="4"
             placeholder="Describe los avances realizados"
             required
-        ></textarea>
+          ></textarea>
         </div>
 
         <!-- Lo que quiere que el profesor revise -->
         <div class="form-group">
-        <label for="revision-solicitada">¿Qué quieres que el profesor revise?</label>
-        <textarea
+          <label for="revision-solicitada"
+            >¿Qué quieres que el profesor revise?</label
+          >
+          <textarea
             class="form-control"
             id="revision-solicitada"
             rows="3"
             placeholder="Indica qué deseas que el profesor revise"
             required
-        ></textarea>
+          ></textarea>
         </div>
 
         <!-- Subir archivo PDF -->
         <div class="form-group">
-        <label for="archivo-tesis">Subir archivo PDF de la tesis:</label>
-        <input
+          <label for="archivo-tesis">Subir archivo PDF de la tesis:</label>
+          <input
             type="file"
             class="form-control-file"
             id="archivo-tesis"
             accept=".pdf"
             required
-        />
+          />
         </div>
 
         <!-- Botón para enviar solicitud -->
         <button
-        id="submit-button"
-        class="btn btn-success btn-block"
-        onclick="submitRevision(event)"
+          id="submit-button"
+          class="btn btn-success btn-block"
+          onclick="submitRevision(event)"
         >
-        Enviar solicitud de revisión
+          Enviar solicitud de revisión
         </button>
 
         <!-- Botón para ver comentarios -->
         <button
-        id="view-comments-button"
-        class="btn btn-info btn-block"
-        onclick="viewComments(event)"
+          id="view-comments-button"
+          class="btn btn-info btn-block"
+          onclick="viewComments(event)"
         >
-        Ver comentarios del asesor
+          Ver comentarios del asesor
         </button>
-    </form>
+      </form>
     </div>
 
     <!-- JavaScript para funcionalidad -->
     <script>
-    // Simulación de envío de la solicitud de revisión
-    function submitRevision(event) {
+      // Simulación de envío de la solicitud de revisión
+      function submitRevision(event) {
         event.preventDefault(); // Evita que el formulario recargue la página
 
-        const nombreTesis = document.getElementById('nombre-tesis').value;
-        const notasAvances = document.getElementById('notas-avances').value;
-        const revisionSolicitada = document.getElementById('revision-solicitada').value;
-        const archivoTesis = document.getElementById('archivo-tesis').files[0];
+        const nombreTesis = document.getElementById("nombre-tesis").value;
+        const notasAvances = document.getElementById("notas-avances").value;
+        const revisionSolicitada = document.getElementById(
+          "revision-solicitada"
+        ).value;
+        const archivoTesis = document.getElementById("archivo-tesis").files[0];
 
         if (!archivoTesis) {
-        alert('Por favor, selecciona un archivo PDF para subir.');
-        return;
+          alert("Por favor, selecciona un archivo PDF para subir.");
+          return;
         }
 
-        alert(`Solicitud enviada:\nNombre de la tesis: ${nombreTesis}\nNotas sobre los avances: ${notasAvances}\nRevisión solicitada: ${revisionSolicitada}`);
+        alert(
+          `Solicitud enviada:\nNombre de la tesis: ${nombreTesis}\nNotas sobre los avances: ${notasAvances}\nRevisión solicitada: ${revisionSolicitada}`
+        );
 
         // Aquí iría la lógica para subir los datos al servidor
         // Ejemplo de uso de FormData para enviar el archivo
@@ -151,22 +160,24 @@
             console.error('Error:', error);
         });
         */
-    }
+      }
 
-    // Función del botón de regreso
-    document.getElementById('back-button').addEventListener('click', function () {
-        window.location.href = 'index.html'; // Cambiar a la ruta del menú principal
-    });
+      // Función del botón de regreso
+      document
+        .getElementById("back-button")
+        .addEventListener("click", function () {
+          window.location.href = "index.html"; // Cambiar a la ruta del menú principal
+        });
 
-    // Función del botón para ver comentarios
-    function viewComments(event) {
+      // Función del botón para ver comentarios
+      function viewComments(event) {
         event.preventDefault(); // Evita que el botón recargue la página
-        window.location.href = 'PagEstudiantesVerCom.html'; // Cambiar a la página de comentarios
-    }
+        window.location.href = "PagEstudiantesVerCom.html"; // Cambiar a la página de comentarios
+      }
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+  </body>
 </html>

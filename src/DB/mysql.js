@@ -41,6 +41,7 @@ function uno(tabla, id) {
   });
 }
 function query(sql, params = []) {
+  console.log(sql, params);
   return new Promise((resolve, reject) => {
     conexion.query(sql, params, (err, resultado) => {
       if (err) {
@@ -52,6 +53,7 @@ function query(sql, params = []) {
   });
 }
 function agregar(tabla, data) {
+  console.log(tabla);
   return new Promise((res, req) => {
     conexion.query(
       `INSERT INTO ${tabla} SET ? ON DUPLICATE KEY UPDATE ?`,

@@ -18,14 +18,14 @@
             <div class="card-body">
               <h2 class="card-title text-center">Iniciar Sesión</h2>
               <!-- Form de Inicio de Sesion -->
-              <form id="loginForm">
+              <form id="loginForm" action="/login" method="post">
                 <div class="form-group">
-                  <label for="numero_de_cuenta">Número de Cuenta:</label>
+                  <label for="numero_cuenta">Número de Cuenta:</label>
                   <input
                     type="number"
                     class="form-control"
-                    id="numero_de_cuenta"
-                    name="numero_de_cuenta"
+                    id="numero_cuenta"
+                    name="numero_cuenta"
                     required
                   />
                 </div>
@@ -195,6 +195,7 @@
             asesores.body.forEach((asesor) => {
               const option = document.createElement("option");
               option.value = asesor.numero_cuenta;
+              console.log(option);
               option.textContent = asesor.nombre;
               asesorSelect.appendChild(option);
             });
