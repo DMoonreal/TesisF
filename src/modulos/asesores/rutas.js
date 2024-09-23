@@ -38,6 +38,7 @@ async function eliminar(req, res) {
 async function agregar(req, res) {
   try {
     const items = await controlador.agregar(req.body);
+    console.log(items);
     if (req.body.id == 0) {
       mensaje = "Asesor Agregado con Exito";
     } else mensaje = "Asesor Actualizado";

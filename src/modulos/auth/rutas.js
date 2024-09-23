@@ -6,10 +6,13 @@ router.post("/", login);
 
 async function login(req, res) {
   try {
-    const { numero_de_cuenta, password } = req.body; // Cambia a req.body
-    const token = await controlador.login(numero_de_cuenta, password);
+    const { numero_cuenta, contrasena, rol } = req.body; // Cambia a req.body
+    const token = await controlador.login(numero_cuenta, contrasena, rol);
+
     if (token) {
-      res.redirect("/PaginaP");
+      if (rol == "alumno") {
+        res.redirect("/PagEstudiante");
+      } else res.redirect("/PagAsesores");
     } else {
       res.redirect("/?error=Credenciales%20incorrectas"); // Agregar mensaje de error
     }

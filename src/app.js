@@ -17,7 +17,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //Rutas
 app.use("/", express.static(__dirname + "/public"));
-app.use("/PaginaP", express.static(__dirname + "/public/PaginaP.html"));
+app.use("/PagAsesores", express.static(__dirname + "/public/PagAsesores.html"));
+app.use(
+  "/PagEstudiante",
+  express.static(__dirname + "/public/PagEstudiante.html")
+);
 app.use("/api/asesores", asesores);
 app.use("/api/tesis", tesis);
 app.use("/login", login);
