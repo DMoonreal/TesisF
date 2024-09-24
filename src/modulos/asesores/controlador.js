@@ -20,7 +20,6 @@ module.exports = function (dbinyectada) {
 
   async function agregar(body) {
     let usuario;
-    console.log(body);
     if (body.rol == "alumno") {
       usuario = {
         numero_cuenta: body.numero_cuenta,
