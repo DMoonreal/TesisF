@@ -26,6 +26,7 @@ async function uno(req, res) {
     respuesta.error(req, res, err, 500);
   }
 }
+
 async function eliminar(req, res) {
   try {
     const items = await controlador.eliminar(req.body);

@@ -1,5 +1,4 @@
 let TABLA = "alumnos";
-const auth = require("../auth");
 
 module.exports = function (dbinyectada) {
   let db = dbinyectada;
