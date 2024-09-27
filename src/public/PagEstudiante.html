@@ -34,11 +34,20 @@
       #view-comments-button {
         margin-top: 10px;
       }
+      #welcome-message {
+        margin: 20px 0;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
     <!-- Botón de regreso -->
     <button id="back-button" class="btn btn-secondary">← Volver</button>
+
+    <!-- Mensaje de bienvenida -->
+    <div id="welcome-message"></div>
 
     <!-- Contenedor principal -->
     <div id="container" class="container">
@@ -67,6 +76,7 @@
             class="form-control"
             id="notas-avances"
             rows="4"
+            name="notas_v"
             placeholder="Describe los avances realizados"
             required
           ></textarea>
@@ -80,6 +90,7 @@
           <textarea
             class="form-control"
             id="revision-solicitada"
+            name="sugerencia"
             rows="3"
             placeholder="Indica qué deseas que el profesor revise"
             required
@@ -91,6 +102,7 @@
           <label for="archivo-tesis">Subir archivo PDF de la tesis:</label>
           <input
             type="file"
+            name="archivo_pdf"
             class="form-control-file"
             id="archivo-tesis"
             accept=".pdf"
@@ -102,7 +114,7 @@
         <button
           id="submit-button"
           class="btn btn-success btn-block"
-          onclick="submitRevision(event)"
+          type="submit"
         >
           Enviar solicitud de revisión
         </button>
@@ -120,46 +132,24 @@
 
     <!-- JavaScript para funcionalidad -->
     <script>
-      // Simulación de envío de la solicitud de revisión
-      function submitRevision(event) {
-        event.preventDefault(); // Evita que el formulario recargue la página
+      // Función para decodificar el token y mostrar el nombre del usuario
+      function cargarDatosProtegidos() {
+        const token = localStorage.getItem("token"); // Obtener el token de localStorage
 
-        const nombreTesis = document.getElementById("nombre-tesis").value;
-        const notasAvances = document.getElementById("notas-avances").value;
-        const revisionSolicitada = document.getElementById(
-          "revision-solicitada"
-        ).value;
-        const archivoTesis = document.getElementById("archivo-tesis").files[0];
-
-        if (!archivoTesis) {
-          alert("Por favor, selecciona un archivo PDF para subir.");
+        if (!token) {
+          console.log("No se encontró el token, redirigiendo al login.");
+          window.location.href = "/"; // Redirigir si no hay token
           return;
         }
 
-        alert(
-          `Solicitud enviada:\nNombre de la tesis: ${nombreTesis}\nNotas sobre los avances: ${notasAvances}\nRevisión solicitada: ${revisionSolicitada}`
-        );
+        // Decodificar el token JWT (usando jwt-decode)
+        const decodedToken = jwt_decode(token); // Decodificar el token
+        const nombreUsuario = decodedToken.nombre || "Usuario"; // Asume que el token tiene el campo "nombre"
 
-        // Aquí iría la lógica para subir los datos al servidor
-        // Ejemplo de uso de FormData para enviar el archivo
-        /*
-        const formData = new FormData();
-        formData.append('nombreTesis', nombreTesis);
-        formData.append('notasAvances', notasAvances);
-        formData.append('revisionSolicitada', revisionSolicitada);
-        formData.append('archivoTesis', archivoTesis);
-
-        fetch('/api/revision', {
-        method: 'POST',
-        body: formData,
-        }).then((response) => response.json())
-        .then((data) => {
-            console.log('Solicitud enviada:', data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-        */
+        // Mostrar el nombre del usuario en la parte superior
+        document.getElementById(
+          "welcome-message"
+        ).innerText = `Bienvenido, ${nombreUsuario}`;
       }
 
       // Función del botón de regreso
@@ -174,8 +164,12 @@
         event.preventDefault(); // Evita que el botón recargue la página
         window.location.href = "PagEstudiantesVerCom.html"; // Cambiar a la página de comentarios
       }
+
+      // Llamar a la función cargarDatosProtegidos cuando se cargue la página
+      document.addEventListener("DOMContentLoaded", cargarDatosProtegidos);
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

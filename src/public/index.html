@@ -18,7 +18,7 @@
             <div class="card-body">
               <h2 class="card-title text-center">Iniciar Sesión</h2>
               <!-- Form de Inicio de Sesion -->
-              <form id="loginForm" action="/login" method="post">
+              <form id="loginForm">
                 <div class="form-group">
                   <label for="numero_cuenta">Número de Cuenta:</label>
                   <input
@@ -62,6 +62,7 @@
                 <button type="submit" class="btn btn-primary btn-block">
                   Iniciar Sesión
                 </button>
+                <p id="loginSpan"></p>
               </form>
               <!-- Finaliza el form -->
               <p class="text-center mt-3">
@@ -106,8 +107,8 @@
               <div class="form-group">
                 <label for="numero_cuenta">Número de Cuenta:</label>
                 <input
-                  type="text"
                   class="form-control"
+                  type="number"
                   id="numero_cuenta"
                   name="numero_cuenta"
                   required
@@ -168,7 +169,7 @@
               </div>
 
               <button type="submit" class="btn btn-primary btn-block">
-                Registrarse 2
+                Registrarse
               </button>
             </form>
           </div>
@@ -178,6 +179,7 @@
     <!-- Aqui acaba el Modal de Registro -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        const loginSpan = document.getElementById("loginSpan");
         const alumnoRadio = document.getElementById("alumnoReg");
         const asesorDropdown = document.getElementById("asesorDropdownReg");
         const asesorSelect = document.getElementById("asesorSelectReg");
@@ -222,6 +224,50 @@
         // Ejecutar la función al cargar la página (por si algún radio ya está seleccionado)
         toggleAsesorDropdown();
       });
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Evitar que el formulario se envíe normalmente
+
+          const formData = new FormData(this); // Obtener los datos del formulario
+          const data = Object.fromEntries(formData.entries()); // Convertir a un objeto
+
+          // Enviar la solicitud al backend usando fetch
+          await fetch("/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((res) => res.json()) // Aquí extraemos el JSON con el token
+            .then((resData) => {
+              if (resData.token) {
+                // Verificar si se recibió el token
+                loginSpan.innerText = "Sesión Iniciada... Entrando";
+                loginSpan.style.color = "green";
+
+                // Guardar el token en localStorage
+                localStorage.setItem("token", resData.token);
+
+                setTimeout(() => {
+                  if (data.rol === "alumno") {
+                    window.location.href = `/PagEstudiante`;
+                  } else {
+                    window.location.href = `/PagAsesores`;
+                  }
+                }, 2500);
+              } else {
+                loginSpan.innerText = "Error al Iniciar";
+                loginSpan.style.color = "red";
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              loginSpan.innerText = "Error al Iniciar";
+              loginSpan.style.color = "red";
+            });
+        });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
