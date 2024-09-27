@@ -141,9 +141,16 @@
           window.location.href = "/"; // Redirigir si no hay token
           return;
         }
-
+        const decodedToken = jwt_decode(token);
+        const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
+        if (decodedToken.exp < currentTime) {
+          console.log("El token ha expirado, redirigiendo al login.");
+          localStorage.removeItem("token"); // Eliminar el token
+          window.location.href = "/"; // Redirigir al login
+          return;
+        }
         // Decodificar el token JWT (usando jwt-decode)
-        const decodedToken = jwt_decode(token); // Decodificar el token
+        // Decodificar el token
         const nombreUsuario = decodedToken.nombre || "Usuario"; // Asume que el token tiene el campo "nombre"
 
         // Mostrar el nombre del usuario en la parte superior

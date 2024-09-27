@@ -11,7 +11,7 @@ module.exports = function (dbinyectada) {
   }
 
   function uno(id) {
-    return db.uno(TABLA, id);
+    return db.uno("alumnos", id);
   }
 
   function eliminar(body) {

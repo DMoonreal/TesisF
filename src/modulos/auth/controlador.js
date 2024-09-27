@@ -42,7 +42,7 @@ module.exports = function (dbinyectada) {
     // Lanza un error si las credenciales no son correctas
   }
   async function generateAccessToken(perfil) {
-    return jwt.sign(perfil, process.env.SECRET, { expiresIn: "1h" });
+    return jwt.sign(perfil, process.env.SECRET, { expiresIn: "1m" });
   }
 
   async function agregar(data) {
