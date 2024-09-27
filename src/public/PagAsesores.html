@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -93,6 +92,7 @@
                 <!-- Aquí se mostrarán los alumnos -->
             </div>
         </div>
+      </div>
 
         <!-- Visualizador de PDF -->
         <div id="pdf-viewer">
@@ -163,6 +163,28 @@
         function loadPdf(pdfUrl) {
             document.getElementById('pdf-frame').src = pdfUrl;
         }
+        // Redireccionar a la página correspondiente con el token en la cabecera
+        fetch("/PagEstudiante", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Acceso denegado");
+            }
+            window.location.href = "/PagEstudiante"; // Redirigir si el token es válido
+          })
+          .catch((error) => {
+            console.error("Token no válido:", error);
+            window.location.href = "/"; // Redirige al login si hay un error
+          });
+      });
+      // Función para cargar un PDF en el iframe
+      function loadPdf(pdfUrl) {
+        document.getElementById("pdf-frame").src = pdfUrl;
+      }
 
         // Simulación de generación de comentarios por IA
         function generateComments() {
@@ -181,16 +203,17 @@
                 // Aquí iría la lógica para subir el comentario al servidor
             }
         }
+      }
 
-        // Función del botón de regreso
-        document.getElementById('back-button').addEventListener('click', function () {
-            window.location.href = 'index.html'; // Cambiar a la ruta del menú principal
+      // Función del botón de regreso
+      document
+        .getElementById("back-button")
+        .addEventListener("click", function () {
+          window.location.href = "index.html"; // Cambiar a la ruta del menú principal
         });
     </script>
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
-</html>
