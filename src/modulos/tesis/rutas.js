@@ -35,13 +35,16 @@ async function eliminar(req, res) {
 async function agregar(req, res) {
   try {
     const items = await controlador.agregar(req.body);
+    let mensaje;
     if (req.body.id == 0) {
-      mensaje = "Tesis agregada con Exito";
-    } else mensaje = "Tesis Actualizada";
-    respuesta.sucess(req, res, mensaje, 201);
+      mensaje = "Tesis agregada con éxito";
+      respuesta.sucess(req, res, { mensaje, insertId: items.insertId }, 201); // Devuelve también el insertId
+    } else {
+      mensaje = "Tesis actualizada";
+      respuesta.sucess(req, res, { mensaje, insertId: items.insertId }, 201); // No hay insertId en actualización
+    }
   } catch (err) {
     respuesta.error(req, res, err, 500);
   }
 }
-
 module.exports = router;

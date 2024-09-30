@@ -20,11 +20,14 @@ module.exports = function (dbinyectada) {
   async function agregar(body) {
     return db.agregar(TABLA, body);
   }
-
+  async function peticion(body) {
+    return await db.query(`INSERT INTO alumnos_tesis SET ?`, [body]);
+  }
   return {
     todos,
     uno,
     eliminar,
     agregar,
+    peticion,
   };
 };

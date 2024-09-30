@@ -135,6 +135,7 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const token = localStorage.getItem("token"); // Obtener el token de localStorage
+        console.log(token)
         if (!token) {
           console.log("No se encontró el token, redirigiendo al login.");
           window.location.href = "/"; // Redirigir si no hay token
@@ -209,11 +210,21 @@
       }
 
       // Función del botón de regreso
-      document
-        .getElementById("back-button")
-        .addEventListener("click", function () {
-          window.location.href = "index.html"; // Cambiar a la ruta del menú principal
-        });
+  document.getElementById("back-button").addEventListener("click", async function () {
+  const token = await localStorage.getItem("token");
+  console.log("Token actual:", token); // Verifica si el token está disponible
+  
+  if (token) {
+    await localStorage.removeItem("token"); // Elimina el token si existe
+    console.log("Token eliminado");
+  } else {
+    console.log("No se encontró token");
+  }
+  setTimeout(function() {
+    window.location.href = "index.html";
+  }, 1000); // Cambiar a la ruta del menú principal
+});
+
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

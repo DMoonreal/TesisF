@@ -8,6 +8,7 @@ router.get("/", todos);
 router.get("/:id", uno);
 router.put("/", eliminar);
 router.post("/", agregar);
+router.post("/peticion", peticion);
 
 async function todos(req, res) {
   try {
@@ -46,5 +47,11 @@ async function agregar(req, res) {
     res.redirect("/");
   }
 }
-
+async function peticion(req, res) {
+  try {
+    const items = await controlador.peticion(req.body);
+  } catch (err) {
+    console.log(err);
+  }
+}
 module.exports = router;
