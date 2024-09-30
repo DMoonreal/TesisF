@@ -56,6 +56,7 @@ function query(sql, params = []) {
         reject(err);
       } else {
         resolve(resultado);
+        return "Todo bien";
       }
     });
   });
