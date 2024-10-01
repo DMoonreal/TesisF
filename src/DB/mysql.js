@@ -29,20 +29,20 @@ function todos(tabla) {
   });
 }
 function uno(tabla, id) {
-  console.log("Entre a la funcion uno", id)
+  console.log("Entre a la funcion uno", id);
   return new Promise((res, req) => {
     conexion.query(
-      `SELECT * FROM ${tabla} WHERE asesor_numero_cuenta = ?`,  // Asegúrate de que `numero_cuenta` sea el campo correcto
-      [id],  // Usa el id como parámetro seguro 
+      `SELECT * FROM ${tabla} WHERE asesor_numero_cuenta = ?`, // Asegúrate de que `numero_cuenta` sea el campo correcto
+      [id], // Usa el id como parámetro seguro
       (err, resultado) => {
         if (err) {
-          console.log('Error en la consulta SQL:', err);  // Añadir logs para más información
+          console.log("Error en la consulta SQL:", err); // Añadir logs para más información
           return req(err);
         } else if (resultado.length === 0) {
-          console.log('No se encontraron resultados');  // Indicar si no se encuentra nada
-          return req(new Error('No se encontraron resultados'));
+          console.log("No se encontraron resultados"); // Indicar si no se encuentra nada
+          return req(new Error("No se encontraron resultados"));
         } else {
-          res(resultado);  // Devolver los resultados de la consulta
+          res(resultado); // Devolver los resultados de la consulta
         }
       }
     );

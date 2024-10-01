@@ -6,18 +6,17 @@ router.post("/", login);
 
 async function login(req, res) {
   try {
-    const { numero_cuenta, contrasena, rol } = req.body; // Cambia a req.body
+    const { numero_cuenta, contrasena, rol } = req.body;
     const token = await controlador.login(numero_cuenta, contrasena, rol);
 
     if (token) {
-      if (rol == "alumno") {
-        res.redirect("/PagEstudiante");
-      } else res.redirect("/PagAsesores");
+      console.log("Mande el Token", token);
+      return res.status(200).json({ token }); // Devuelve el token en la respuesta JSON
     } else {
-      res.redirect("/?error=Credenciales%20incorrectas"); // Agregar mensaje de error
+      return res.status(401).json({ message: "Authentication failed" });
     }
   } catch (err) {
-    res.redirect("/?error=Error%20en%20el%20servidor");
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 

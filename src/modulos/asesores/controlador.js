@@ -11,7 +11,7 @@ module.exports = function (dbinyectada) {
   }
 
   function uno(id) {
-    return db.uno(TABLA, id);
+    return db.uno("alumnos", id);
   }
 
   function eliminar(body) {
@@ -19,23 +19,17 @@ module.exports = function (dbinyectada) {
   }
 
   async function agregar(body) {
-    let usuario;
+    let usuario = {
+      numero_cuenta: body.numero_cuenta,
+      nombre: body.nombre,
+      contrasena: body.contrasena,
+    };
     if (body.rol == "alumno") {
-      usuario = {
-        numero_cuenta: body.numero_cuenta,
-        nombre: body.nombre,
-        contrasena: body.contrasena,
-        asesor_numero_cuenta: body.asesor,
-      };
       TABLA = "alumnos";
+      usuario.asesor_numero_cuenta = body.asesor;
     } else if (body.rol == "asesor") {
       console.log("entre asesor");
       TABLA = "asesores";
-      usuario = {
-        numero_cuenta: body.numero_cuenta,
-        nombre: body.nombre,
-        contrasena: body.contrasena,
-      };
     }
     return await db.agregar(TABLA, usuario);
   }

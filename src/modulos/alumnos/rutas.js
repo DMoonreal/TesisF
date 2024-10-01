@@ -8,6 +8,7 @@ router.get("/", todos);
 router.get("/:id", uno);
 router.put("/", eliminar);
 router.post("/", agregar);
+router.get("/tesis/:idAlumno", getTesis)
 
 async function todos(req, res) {
   try {
@@ -21,6 +22,15 @@ async function todos(req, res) {
 async function uno(req, res) {
   try {
     const items = await controlador.uno(req.params.id);
+    respuesta.sucess(req, res, items, 200);
+  } catch (err) {
+    respuesta.error(req, res, err, 500);
+  }
+}
+
+async function getTesis(req, res) {
+  try {
+    const items = await controlador.getTesis(req.params.idAlumno);
     respuesta.sucess(req, res, items, 200);
   } catch (err) {
     respuesta.error(req, res, err, 500);
