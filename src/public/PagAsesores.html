@@ -91,159 +91,152 @@
     <div id="sidebar">
       <h5 id="sidebar-title">Listado de Alumnos</h5>
       <div id="commit-list"></div>
-    </div>
 
-
-    <!-- Visualizador de PDF -->
-    <div id="pdf-viewer">
-      <h5>Visualizador de archivos PDF</h5>
-      <iframe id="pdf-frame" src="" frameborder="0" width="100%" height="100%">
-      </iframe>
-      <!-- <embed src="/TDD-Equipo.pdf" type="application/pdf"> -->
-    </div>
-
-    <!-- Sección de comentarios y generación de texto por IA -->
-    <div id="comments-section">
-      <h5>Comentarios del asesor</h5>
-      <div id="ia-output" contenteditable="true">
-        <!-- Aquí se mostrará el texto generado por IA -->
-        Comentarios generados por IA...
+      <!-- Visualizador de PDF -->
+      <div id="pdf-viewer">
+        <h5>Visualizador de archivos PDF</h5>
+        <iframe id="pdf-frame" src="" frameborder="0" width="100%" height="100%">
+        </iframe>
+        <!-- <embed src="/TDD-Equipo.pdf" type="application/pdf"> -->
       </div>
-      <button class="btn btn-primary" onclick="generateComments()" style="margin: 10px">
-        Generar comentarios con IA
-      </button>
-      <form action="/api/alumnos/" method="post"">
-        <textarea id=" comment-input" placeholder="Escribe tu comentario aquí"></textarea>
-        <button id="submit-button" class="btn btn-success" onclick="submitComment()">
-          Subir comentario
+
+      <!-- Sección de comentarios y generación de texto por IA -->
+      <div id="comments-section">
+        <h5>Comentarios del asesor</h5>
+        <div id="ia-output" contenteditable="true">
+          <!-- Aquí se mostrará el texto generado por IA -->
+          Comentarios generados por IA...
+        </div>
+        <button class="btn btn-primary" onclick="generateComments()" style="margin: 10px">
+          Generar comentarios con IA
         </button>
-      </form>
+        <form action="/api/alumnos/" method="post"">
+        <textarea id=" comment-input" placeholder="Escribe tu comentario aquí"></textarea>
+          <button id="submit-button" class="btn btn-success" onclick="submitComment()">
+            Subir comentario
+          </button>
+        </form>
 
+      </div>
     </div>
-  </div>
 
-  <!-- JavaScript para funcionalidad -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.log("No se encontró el token, redirigiendo al login.");
-        window.location.href = "/";
-        return;
-      }
-
-      const decodedToken = jwt_decode(token);
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (decodedToken.exp < currentTime) {
-        console.log("El token ha expirado, redirigiendo al login.");
-        localStorage.removeItem("token");
-        window.location.href = "/";
-        return;
-      }
-
-      const sidebar = document.getElementById("sidebar");
-      const sidebarTitle = document.getElementById("sidebar-title");
-      const commitList = document.getElementById("commit-list");
-      const id = decodedToken.numero_cuenta;
-      let alumnosData = []; // Variable global para almacenar alumnos
-      let tesisData = {}; // Variable global para almacenar tesis asociadas a alumnos
-
-      async function cargarAlumnos() {
-        try {
-          const response = await fetch(`/api/alumnos/${id}`);
-          const alumnos = await response.json();
-          alumnosData = alumnos.body; // Guardar datos de alumnos
-          console.log("info global alumnos", alumnosData)
-          commitList.innerHTML = "";
-          alumnos.body.forEach((alumno) => {
-            const div = document.createElement("div");
-            div.classList.add("commit-item");
-            div.textContent = `Alumno: ${alumno.nombre} - ${alumno.numero_cuenta}`;
-            div.onclick = () => mostrarTesisAlumno(alumno); // Asignar función al hacer clic
-            //console.log(`Mostrando información para ${alumno.numero_cuenta}`);
-            commitList.appendChild(div);
-          });
-        } catch (error) {
-          console.error("Error al cargar los alumnos:", error);
+    <!-- JavaScript para funcionalidad -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.log("No se encontró el token, redirigiendo al login.");
+          window.location.href = "/";
+          return;
         }
-      }
-      // Función para mostrar las tesis de un alumno
-      async function mostrarTesisAlumno(alumno) {
-        try {
-          // Cambiar el título de la sidebar para mostrar el nombre del alumno
-          sidebarTitle.textContent = `Tesis de ${alumno.nombre}`;
-          commitList.innerHTML = ""; // Limpiar la lista actual
 
-          // Agregar botón para volver al listado de alumnos
-          const backButton = document.createElement("button");
-          backButton.textContent = "Volver a lista de alumnos";
-          backButton.classList.add("btn", "btn-primary", "mb-3");
-          backButton.onclick = () => {
-            sidebarTitle.textContent = "Listado de Alumnos";
-            cargarAlumnos(); // Volver a cargar los alumnos
-          };
-          commitList.appendChild(backButton);
-          // Cargar las tesis del alumno
-          const response = await fetch(`/api/alumnos/tesis/${alumno.numero_cuenta}`);
-          const tesis = await response.json();
-          const tesisBodyArray = Array.isArray(tesis.body) ? tesis.body : [tesis.body];
-          //console.log("Variable global con info de tesis:", tesisData);
-          // Mostrar las tesis del alumno en la sidebar
-          tesisBodyArray.forEach((tesis) => {
-            console.log("info de la tesis", tesis)
-            const div = document.createElement("div");
-            div.classList.add("tesis-item");
-            div.textContent = `Tesis: ${tesis.nombre_tesis}`;
-            div.onclick = () => loadPdf(tesis); // Asignar función al hacer clic
-            //console.log(`Mostrando información para tesis ${tesis.id}`);
-            commitList.appendChild(div);
-          });
-        } catch (error) {
-          console.error("Error al cargar las tesis:", error);
+        const decodedToken = jwt_decode(token);
+        const currentTime = Math.floor(Date.now() / 1000);
+        if (decodedToken.exp < currentTime) {
+          console.log("El token ha expirado, redirigiendo al login.");
+          localStorage.removeItem("token");
+          window.location.href = "/";
+          return;
         }
-      }
-      // Llamar a la función para cargar los alumnos al cargar la página
-      cargarAlumnos();
-    });
 
+        const sidebar = document.getElementById("sidebar");
+        const sidebarTitle = document.getElementById("sidebar-title");
+        const commitList = document.getElementById("commit-list");
+        const id = decodedToken.numero_cuenta;
+        let alumnosData = []; // Variable global para almacenar alumnos
+        let tesisData = {}; // Variable global para almacenar tesis asociadas a alumnos
 
-
-    // Función para cargar un PDF en el iframe
-    async function loadPdf(tesis) {
-      console.log(`Mostrando información para tesis ${tesis.id}`)
-    }
-
-
-    // Simulación de generación de comentarios por IA
-    function generateComments() {
-      const iaOutput = document.getElementById("ia-output");
-      iaOutput.innerHTML =
-        "<b>Comentario IA:</b> La estructura de la tesis está bien planteada, pero se recomienda mayor claridad en la redacción del capítulo 3.";
-    }
-
-    // Simulación de subida de comentarios
-    function submitComment() {
-      const comment = document.getElementById("comment-input").value;
-      if (comment.trim() === "") {
-        alert("Por favor, escribe un comentario antes de subirlo.");
-      } else {
-        alert("Comentario enviado: " + comment);
-        // Aquí iría la lógica para subir el comentario al servidor
-      }
-    }
-
-    // Función del botón de regreso
-    document
-      .getElementById("back-button")
-      .addEventListener("click", function () {
-        window.location.href = "index.html"; // Cambiar a la ruta del menú principal
+        async function cargarAlumnos() {
+          try {
+            const response = await fetch(`/api/alumnos/${id}`);
+            const alumnos = await response.json();
+            alumnosData = alumnos.body; // Guardar datos de alumnos
+            console.log("info global alumnos", alumnosData)
+            commitList.innerHTML = "";
+            alumnos.body.forEach((alumno) => {
+              const div = document.createElement("div");
+              div.classList.add("commit-item");
+              div.textContent = `Alumno: ${alumno.nombre} - ${alumno.numero_cuenta}`;
+              div.onclick = () => mostrarTesisAlumno(alumno); // Asignar función al hacer clic
+              //console.log(`Mostrando información para ${alumno.numero_cuenta}`);
+              commitList.appendChild(div);
+            });
+          } catch (error) {
+            console.error("Error al cargar los alumnos:", error);
+          }
+        }
+        // Función para mostrar las tesis de un alumno
+        async function mostrarTesisAlumno(alumno) {
+          try {
+            // Cambiar el título de la sidebar para mostrar el nombre del alumno
+            sidebarTitle.textContent = `Tesis de ${alumno.nombre}`;
+            commitList.innerHTML = ""; // Limpiar la lista actual
+            // Agregar botón para volver al listado de alumnos
+            const backButton = document.createElement("button");
+            backButton.textContent = "Volver a lista de alumnos";
+            backButton.classList.add("btn", "btn-primary", "mb-3");
+            backButton.onclick = () => {
+              sidebarTitle.textContent = "Listado de Alumnos";
+              cargarAlumnos(); // Volver a cargar los alumnos
+            };
+            commitList.appendChild(backButton);
+            // Cargar las tesis del alumno
+            const response = await fetch(`/api/alumnos/tesis/${alumno.numero_cuenta}`);
+            const tesis = await response.json();
+            const tesisBodyArray = Array.isArray(tesis.body) ? tesis.body : [tesis.body];
+            //console.log("Variable global con info de tesis:", tesisData);
+            // Mostrar las tesis del alumno en la sidebar
+            tesisBodyArray.forEach((tesis) => {
+              console.log("info de la tesis", tesis)
+              const div = document.createElement("div");
+              div.classList.add("tesis-item");
+              div.textContent = `Tesis: ${tesis.nombre_tesis}`;
+              div.onclick = () => loadPdf(tesis); // Asignar función al hacer clic
+              //console.log(`Mostrando información para tesis ${tesis.id}`);
+              commitList.appendChild(div);
+            });
+          } catch (error) {
+            console.error("Error al cargar las tesis:", error);
+          }
+        }
+        // Llamar a la función para cargar los alumnos al cargar la página
+        cargarAlumnos();
       });
-  </script>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      // Función para cargar un PDF en el iframe
+      async function loadPdf(tesis) {
+        console.log(`Mostrando información para tesis ${tesis.id}`)
+      }
+
+
+      // Simulación de generación de comentarios por IA
+      function generateComments() {
+        const iaOutput = document.getElementById("ia-output");
+        iaOutput.innerHTML =
+          "<b>Comentario IA:</b> La estructura de la tesis está bien planteada, pero se recomienda mayor claridad en la redacción del capítulo 3.";
+      }
+
+      // Simulación de subida de comentarios
+      function submitComment() {
+        const comment = document.getElementById("comment-input").value;
+        if (comment.trim() === "") {
+          alert("Por favor, escribe un comentario antes de subirlo.");
+        } else {
+          alert("Comentario enviado: " + comment);
+          // Aquí iría la lógica para subir el comentario al servidor
+        }
+      }
+
+      // Función del botón de regreso
+      document
+        .getElementById("back-button")
+        .addEventListener("click", function () {
+          window.location.href = "index.html"; // Cambiar a la ruta del menú principal
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
-</html>

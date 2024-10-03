@@ -11,7 +11,6 @@ module.exports = function (dbinyectada) {
   }
 
   async function login(numero_de_cuenta, password, rol) {
-    console.log("Entre a la funcion login", numero_de_cuenta);
     numero_de_cuenta = parseInt(numero_de_cuenta);
     // Realiza la consulta para encontrar al usuario por su número de cuenta
     if (rol == "alumno") {
@@ -23,7 +22,6 @@ module.exports = function (dbinyectada) {
       `SELECT * FROM ${TABLA} WHERE numero_cuenta = ?`,
       [numero_de_cuenta]
     );
-    
     if (data) {
       const user = data[0];
       // Compara la contraseña proporcionada con la almacenada en la base de datos
@@ -44,7 +42,7 @@ module.exports = function (dbinyectada) {
     // Lanza un error si las credenciales no son correctas
   }
   async function generateAccessToken(perfil) {
-    return jwt.sign(perfil, process.env.SECRET, { expiresIn: "1m" });
+    return jwt.sign(perfil, process.env.SECRET, { expiresIn: "1h" });
   }
 
   async function agregar(data) {
