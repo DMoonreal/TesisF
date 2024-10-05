@@ -104,7 +104,7 @@
             type="file"
             name="archivo_pdf"
             class="form-control-file"
-            id="archivo-tesis"
+            id="pdfFile"
             accept=".pdf"
             required
           />
@@ -159,84 +159,95 @@
         ).innerText = `Bienvenido, ${nombreUsuario}`;
       }
       // Función del botón de regreso
-      document.getElementById("back-button").addEventListener("click", async function () {
-        const token = await localStorage.getItem("token");
-        console.log("Token actual:", token); // Verifica si el token está disponible
-        if (token) {
-          await localStorage.removeItem("token"); // Elimina el token si existe
-          console.log("Token eliminado");
-        } else {
-          console.log("No se encontró token");
-        }
-        setTimeout(function() {
-          window.location.href = "index.html";
-        }, 1000); // Cambiar a la ruta del menú principal
-      });
+      document
+        .getElementById("back-button")
+        .addEventListener("click", async function () {
+          const token = await localStorage.getItem("token");
+          console.log("Token actual:", token); // Verifica si el token está disponible
+          if (token) {
+            await localStorage.removeItem("token"); // Elimina el token si existe
+            console.log("Token eliminado");
+          } else {
+            console.log("No se encontró token");
+          }
+          setTimeout(function () {
+            window.location.href = "index.html";
+          }, 1000); // Cambiar a la ruta del menú principal
+        });
 
       // Función del botón para ver comentarios
       function viewComments(event) {
         event.preventDefault(); // Evita que el botón recargue la página
         window.location.href = "PagEstudiantesVerCom.html"; // Cambiar a la página de comentarios
       }
-      document.getElementById("revision-form").addEventListener("submit",async function (event){
-        event.preventDefault(); // Evitar que el formulario se envíe normalmente
+      //HOLA MUNDO
+      document
+        .getElementById("revision-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Evitar que el formulario se envíe normalmente
           const formData = new FormData(this); // Obtener los datos del formulario
           const data = Object.fromEntries(formData.entries()); // Convertir a un objeto
-            // Función para sanitizar datos
-            function sanitizeInput(input) {
-              const tempElement = document.createElement("div");
-              tempElement.innerText = input; // Evitar la inyección de HTML o scripts
-              return tempElement.innerHTML; // Devolver el contenido "sanitizado"
-            }
+          // Función para sanitizar datos
+          function sanitizeInput(input) {
+            const tempElement = document.createElement("div");
+            tempElement.innerText = input; // Evitar la inyección de HTML o scripts
+            return tempElement.innerHTML; // Devolver el contenido "sanitizado"
+          }
 
-            // Sanitizar cada campo del formulario antes de enviarlo
-            Object.keys(data).forEach((key) => {
-              data[key] = sanitizeInput(data[key]);
-            });
+          // Sanitizar cada campo del formulario antes de enviarlo
+          Object.keys(data).forEach((key) => {
+            data[key] = sanitizeInput(data[key]);
+          });
           const token = localStorage.getItem("token");
           const decodedToken = jwt_decode(token);
-          data.asesor_numero_cuenta = decodedToken.asesor_numero_cuenta
+          data.asesor_numero_cuenta = decodedToken.asesor_numero_cuenta;
+          const fileInput = document.getElementById("pdfFile");
+          const file = fileInput.files[0];
+          const formDataPdf = new FormData();
+          formDataPdf.append("pdf", file);
           try {
-        // Primer fetch: enviar la solicitud para agregar la tesis
-        const response = await fetch("/api/tesis", {
-            method: "POST",
-            headers: {
+            // Primer fetch: enviar la solicitud para agregar la tesis
+            const response = await fetch("/api/tesis", {
+              method: "POST",
+              headers: {
                 "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data), // Convertir el objeto `data` a JSON y enviarlo
-        });
-
-        if (response.ok) {
-          document.getElementById("revision-form").reset();
-          alert("Solicitud de revisión y petición agregada correctamente.");
-            // Convertir la respuesta a JSON
-            const result = await response.json();
-            const tesisId = result.body.insertId; // Obtener el ID de la tesis agregada desde el resultado
-            const alumnoNumeroCuenta = decodedToken.numero_cuenta; // Obtener el número de cuenta del alumno desde el token
-            // Segundo fetch: enviar la solicitud para agregar la petición de alumno
-            const peticionData = {
+              },
+              body: JSON.stringify(data), // Convertir el objeto `data` a JSON y enviarlo
+            });
+            await fetch("/api/tesis/upload", {
+              method: "POST",
+              body: formDataPdf,
+            });
+            if (response.ok) {
+              document.getElementById("revision-form").reset();
+              alert("Solicitud de revisión y petición agregada correctamente.");
+              // Convertir la respuesta a JSON
+              const result = await response.json();
+              const tesisId = result.body.insertId; // Obtener el ID de la tesis agregada desde el resultado
+              const alumnoNumeroCuenta = decodedToken.numero_cuenta; // Obtener el número de cuenta del alumno desde el token
+              // Segundo fetch: enviar la solicitud para agregar la petición de alumno
+              const peticionData = {
                 tesis_id: tesisId, // Usar el id de la tesis anterior
                 alumno_numero_cuenta: alumnoNumeroCuenta, // Pasar el número de cuenta del alumno
-            };
-            const peticionResponse = await fetch("/api/alumnos/peticion", {
+              };
+              const peticionResponse = await fetch("/api/alumnos/peticion", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`, // Enviar el token en el encabezado de autorización
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`, // Enviar el token en el encabezado de autorización
                 },
                 body: JSON.stringify(peticionData), // Enviar la petición con el id de la tesis y el número de cuenta del alumno
-            });
-            
-            // Manejar la respuesta del segundo fetch
-                    
-        } else {
-            alert("Error al enviar la tesis.");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Error al enviar la solicitud.");
-    }
-});
+              });
+
+              // Manejar la respuesta del segundo fetch
+            } else {
+              alert("Error al enviar la tesis.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Error al enviar la solicitud.");
+          }
+        });
       // Llamar a la función cargarDatosProtegidos cuando se cargue la página
       document.addEventListener("DOMContentLoaded", cargarDatosProtegidos);
     </script>
