@@ -7,6 +7,7 @@ const asesores = require("./modulos/asesores/rutas.js");
 const tesis = require("./modulos/tesis/rutas.js");
 const alumnos = require("./modulos/alumnos/rutas.js");
 const login = require("./modulos/auth/rutas.js");
+const comentarios = require("./modulos/comentarios/rutas.js");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -32,6 +33,7 @@ app.use(
 );
 
 app.use("/api/asesores", asesores);
+app.use("/api/comentario", comentarios);
 app.use("/api/tesis", tesis);
 app.use("/api/alumnos", alumnos);
 app.use("/login", login);

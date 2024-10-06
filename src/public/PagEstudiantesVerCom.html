@@ -1,114 +1,127 @@
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Comentarios del Asesor</title>
-        <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        />
-        <style>
-        .comment-section {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comentarios del Asesor</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      .comment-section {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
 
-        .comment-item {
-            border-bottom: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
+      .comment-item {
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
 
-        .comment-item:last-child {
-            border-bottom: none;
-        }
+      .comment-item:last-child {
+        border-bottom: none;
+      }
 
-        .comment-date {
-            font-size: 0.9em;
-            color: #888;
-        }
+      .comment-date {
+        font-size: 0.9em;
+        color: #888;
+      }
 
-        .comment-version {
-            font-size: 0.9em;
-            color: #555;
-            font-weight: bold;
-        }
-        </style>
-    </head>
-    <body>
-        <div class="container mt-5">
-        <h2 class="text-center">Comentarios del Asesor</h2>
+      .comment-version {
+        font-size: 0.9em;
+        color: #555;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2 class="text-center">Comentarios del Asesor</h2>
 
-        <!-- Sección de comentarios -->
-        <div class="comment-section" id="commentSection">
-            <!-- Los comentarios se cargarán aquí -->
-        </div>
+      <!-- Sección de comentarios -->
+      <div class="comment-section" id="commentSection">
+        <!-- Los comentarios se cargarán aquí -->
+      </div>
 
-        <!-- Botón para salir -->
-        <button id="exitButton" class="btn btn-secondary btn-block">Salir</button>
-        </div>
+      <!-- Botón para salir -->
+      <button id="exitButton" class="btn btn-secondary btn-block">Salir</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script>
+      // Obtener el número de cuenta del alumno decodificando el token
+      const token = localStorage.getItem("token"); // Asegúrate de que el token está guardado en el localStorage
+      const decodedToken = jwt_decode(token);
+      const alumno_numero_cuenta = decodedToken.numero_cuenta; // Número de cuenta del alumno
 
-        <script>
-        // Ejemplo de comentarios, ahora con versión de la revisión
-        const comments = [
-            {
-            content: "El enfoque de la introducción es excelente, pero deberías mejorar la redacción en el apartado 2.2.",
-            date: "2024-09-07",
-            version: "Revisión 1.0",
-            from: "Asesor: Juan Pérez"
-            },
-            {
-            content: "Recuerda citar las fuentes correctamente. También falta desarrollar más el marco teórico.",
-            date: "2024-09-01",
-            version: "Revisión 2.0",
-            from: "Asesor: Juan Pérez"
-            },
-            {
-            content: "Buen avance, pero falta la conclusión. Asegúrate de entregarla antes de la próxima reunión.",
-            date: "2024-08-29",
-            version: "Revisión 3.0",
-            from: "Asesor: María López"
-            }
-        ];
+      // Función para cargar los comentarios
+      async function loadComments() {
+        const commentSection = document.getElementById("commentSection");
 
-        // Función para mostrar los comentarios
-        function loadComments() {
-            const commentSection = document.getElementById("commentSection");
+        try {
+          // Hacer la solicitud GET a la API con el número de cuenta del alumno
+          const response = await fetch(
+            `api/comentario/${alumno_numero_cuenta}`
+          );
 
-            comments.forEach((comment) => {
-            const commentItem = document.createElement("div");
-            commentItem.classList.add("comment-item");
+          if (!response.ok) {
+            throw new Error("Error al cargar los comentarios");
+          }
 
-            const content = document.createElement("p");
-            content.textContent = comment.content;
+          const comments = await response.json(); // Asumir que la respuesta es un array de comentarios
 
-            const date = document.createElement("p");
-            date.classList.add("comment-date");
-            date.textContent = `${comment.date} - ${comment.from}`;
+          // Verificar si hay comentarios
+          if (comments.body.length === 0) {
+            const noCommentsMsg = document.createElement("p");
+            noCommentsMsg.textContent = "No tienes ningún comentario aún.";
+            noCommentsMsg.classList.add("text-center", "text-muted");
+            commentSection.appendChild(noCommentsMsg);
+          } else {
+            // Recorrer los comentarios y agregarlos a la sección de comentarios
+            comments.body.forEach((comment) => {
+              const commentItem = document.createElement("div");
+              commentItem.classList.add("comment-item");
 
-            const version = document.createElement("p");
-            version.classList.add("comment-version");
-            version.textContent = `Versión: ${comment.version}`;
+              const content = document.createElement("p");
+              content.textContent = comment.comentario; // Cambia `content` por el campo de comentario real
 
-            commentItem.appendChild(content);
-            commentItem.appendChild(version);
-            commentItem.appendChild(date);
-            commentSection.appendChild(commentItem);
+              const date = document.createElement("p");
+              date.classList.add("comment-date");
+              date.textContent = `${comment.fecha} - Asesor: ${comment.asesor_numero_cuenta}`; // Cambia el nombre si es necesario
+
+              const version = document.createElement("p");
+              version.classList.add("comment-version");
+              version.textContent = `Versión: ${comment.version_tesis}`; // Cambia `version` por el campo de versión real
+
+              commentItem.appendChild(content);
+              commentItem.appendChild(version);
+              commentItem.appendChild(date);
+              commentSection.appendChild(commentItem);
             });
+          }
+        } catch (error) {
+          console.error("Error al cargar los comentarios:", error);
+          const errorMsg = document.createElement("p");
+          errorMsg.textContent = "No se pudieron cargar los comentarios.";
+          errorMsg.classList.add("text-center", "text-danger");
+          commentSection.appendChild(errorMsg);
         }
+      }
 
-        // Llamar la función para cargar los comentarios cuando cargue la página
-        window.onload = loadComments;
+      // Llamar la función para cargar los comentarios cuando cargue la página
+      window.onload = loadComments;
 
-        // Función para el botón de salir
-        document.getElementById("exitButton").addEventListener("click", function () {
-            window.location.href = "PagEstudiante.html"; // Redirecciona a la página principal o donde desees
+      // Función para el botón de salir
+      document
+        .getElementById("exitButton")
+        .addEventListener("click", function () {
+          window.location.href = "PagEstudiante.html"; // Redirecciona a la página principal o donde desees
         });
-        </script>
-    </body>
-    </html>
+    </script>
+  </body>
+</html>

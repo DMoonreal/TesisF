@@ -201,6 +201,7 @@
           const token = localStorage.getItem("token");
           const decodedToken = jwt_decode(token);
           data.asesor_numero_cuenta = decodedToken.asesor_numero_cuenta;
+          data.alumno_numero_cuenta = decodedToken.numero_cuenta;
           const fileInput = document.getElementById("pdfFile");
           const file = fileInput.files[0];
           const formDataPdf = new FormData();

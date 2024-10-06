@@ -48,3 +48,26 @@ CREATE TABLE Comentarios (
     FOREIGN KEY (alumno_numero_cuenta) REFERENCES Alumnos(numero_cuenta),
     FOREIGN KEY (asesor_numero_cuenta) REFERENCES Asesores(numero_cuenta)
 );
+DELIMITER //
+
+CREATE TRIGGER actualizar_version_tesis
+BEFORE INSERT ON tesis
+FOR EACH ROW
+BEGIN
+    DECLARE ultima_version INT;
+
+    -- Buscar la última versión de las tesis del alumno usando el número de cuenta en la tabla tesis
+    SELECT COALESCE(MAX(t.numero_version), 0)
+    INTO ultima_version
+    FROM tesis t
+    WHERE t.alumno_numero_cuenta = NEW.alumno_numero_cuenta; -- Usar el número de cuenta del nuevo registro
+
+    -- Asignar la nueva versión
+    IF ultima_version = 0 THEN
+        SET NEW.numero_version = 1; -- Primera versión
+    ELSE
+        SET NEW.numero_version = ultima_version + 1; -- Incrementar la versión en 1
+    END IF;
+END //
+
+DELIMITER ;
