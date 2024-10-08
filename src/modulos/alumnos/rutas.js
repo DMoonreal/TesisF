@@ -9,6 +9,7 @@ router.get("/:id", uno);
 router.put("/", eliminar);
 router.post("/", agregar);
 router.get("/tesis/:idAlumno", getTesis)
+router.post("/comentarios", agregarComentario);
 
 async function todos(req, res) {
   try {
@@ -54,6 +55,16 @@ async function agregar(req, res) {
   } catch (err) {
     console.log(err);
     res.redirect("/");
+  }
+}
+
+async function agregarComentario(req, res) {
+  try {
+    const comentario = await controlador.agregarComentario(req.body);
+    console.log(comentario);
+    respuesta.sucess(req, res, comentario, 201);
+  } catch (err) {
+    respuesta.error(req, res, err, 500);
   }
 }
 

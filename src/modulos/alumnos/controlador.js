@@ -3,6 +3,7 @@ const { error } = require("../../red/respuestas");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 let TABLA = "alumnos";
+const TABLA_COMENTARIOS = 'comentarios';
 
 module.exports = function (dbinyectada) {
   let db = dbinyectada;
@@ -51,6 +52,12 @@ module.exports = function (dbinyectada) {
         throw new Error("Error al obtener las tesis."); // Lanza un error para que el llamador lo maneje
     }
 }
+//Funcion para agregar comentarios
+async function agregarComentario(comentarioData) {
+  console.log("Entre a la funcion agregarComentario", comentarioData);
+  return db.agregar(TABLA_COMENTARIOS, comentarioData);
+}
+
 
   return {
     todos,
@@ -58,5 +65,6 @@ module.exports = function (dbinyectada) {
     eliminar,
     agregar,
     getTesis,
+    agregarComentario,
   };
 };
