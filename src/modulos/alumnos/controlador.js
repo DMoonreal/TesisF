@@ -26,6 +26,7 @@ module.exports = function (dbinyectada) {
   async function agregar(body) {
     return db.agregar(TABLA, body); 
   }
+<<<<<<< HEAD
 
   //La intencion de esta funcion es trar todas las peticiones de revision del alumno seleccionado,
   //Estas basandose en el numero de cuenta del alumno y la tabla relacional Alumno_Tesis
@@ -59,12 +60,21 @@ async function agregarComentario(comentarioData) {
 }
 
 
+=======
+  async function peticion(body) {
+    return await db.query(`INSERT INTO alumnos_tesis SET ?`, [body]);
+  }
+>>>>>>> origin/main
   return {
     todos,
     uno,
     eliminar,
     agregar,
+<<<<<<< HEAD
     getTesis,
     agregarComentario,
+=======
+    peticion,
+>>>>>>> origin/main
   };
 };

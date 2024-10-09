@@ -49,6 +49,7 @@ function uno(tabla, id) {
   });
 }
 function query(sql, params = []) {
+  console.log("Entre23123");
   console.log(sql, params);
   return new Promise((resolve, reject) => {
     conexion.query(sql, params, (err, resultado) => {
@@ -56,6 +57,7 @@ function query(sql, params = []) {
         reject(err);
       } else {
         resolve(resultado);
+        return "Todo bien";
       }
     });
   });

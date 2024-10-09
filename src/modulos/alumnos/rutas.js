@@ -8,8 +8,12 @@ router.get("/", todos);
 router.get("/:id", uno);
 router.put("/", eliminar);
 router.post("/", agregar);
+<<<<<<< HEAD
 router.get("/tesis/:idAlumno", getTesis)
 router.post("/comentarios", agregarComentario);
+=======
+router.post("/peticion", peticion);
+>>>>>>> origin/main
 
 async function todos(req, res) {
   try {
@@ -57,6 +61,7 @@ async function agregar(req, res) {
     res.redirect("/");
   }
 }
+<<<<<<< HEAD
 
 async function agregarComentario(req, res) {
   try {
@@ -68,4 +73,13 @@ async function agregarComentario(req, res) {
   }
 }
 
+=======
+async function peticion(req, res) {
+  try {
+    const items = await controlador.peticion(req.body);
+  } catch (err) {
+    console.log(err);
+  }
+}
+>>>>>>> origin/main
 module.exports = router;
