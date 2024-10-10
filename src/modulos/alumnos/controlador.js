@@ -26,18 +26,20 @@ module.exports = function (dbinyectada) {
   async function agregar(body) {
     return db.agregar(TABLA, body); 
   }
-<<<<<<< HEAD
 
   //La intencion de esta funcion es trar todas las peticiones de revision del alumno seleccionado,
   //Estas basandose en el numero de cuenta del alumno y la tabla relacional Alumno_Tesis
   async function getTesis(idAlumno) {
     const numero_cuenta = parseInt(idAlumno);
-    console.log("Entre a la funcion getTesis", numero_cuenta);
+    console.log("Entrando a la función getTesis", numero_cuenta);
     
     try {
         // Realiza la consulta a la base de datos
-        const [results] = await db.query(
-            `SELECT t.* FROM tesis t JOIN alumnos_tesis ta ON t.id = ta.tesis_id WHERE ta.alumno_numero_cuenta = ?`,
+        const results = await db.query( 
+            `SELECT t.* 
+            FROM tesis t 
+            JOIN alumnos_tesis at ON t.id = at.tesis_id 
+            WHERE at.alumno_numero_cuenta = ?`,
             [numero_cuenta]
         );
 
@@ -47,10 +49,11 @@ module.exports = function (dbinyectada) {
             return []; // Devuelve un array vacío si no se encuentran tesis
         }
 
+        console.log("Tesis encontradas:", results);
         return results; // Devuelve los resultados de la consulta
     } catch (error) {
         console.error("Error en la consulta SQL:", error);
-        throw new Error("Error al obtener las tesis."); // Lanza un error para que el llamador lo maneje
+        throw new Error("Error al obtener las tesis: " + error.message);
     }
 }
 //Funcion para agregar comentarios
@@ -60,21 +63,16 @@ async function agregarComentario(comentarioData) {
 }
 
 
-=======
   async function peticion(body) {
     return await db.query(`INSERT INTO alumnos_tesis SET ?`, [body]);
   }
->>>>>>> origin/main
   return {
     todos,
     uno,
     eliminar,
     agregar,
-<<<<<<< HEAD
     getTesis,
     agregarComentario,
-=======
     peticion,
->>>>>>> origin/main
   };
 };

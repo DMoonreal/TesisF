@@ -49,15 +49,18 @@ function uno(tabla, id) {
   });
 }
 function query(sql, params = []) {
-  console.log("Entre23123");
-  console.log(sql, params);
+  console.log("Ejecutando consulta SQL:");
+  console.log("SQL:", sql);
+  console.log("Parámetros:", params);
+
   return new Promise((resolve, reject) => {
     conexion.query(sql, params, (err, resultado) => {
       if (err) {
+        console.error("Error en la consulta SQL:", err);
         reject(err);
       } else {
+        console.log("Resultado de la consulta:", resultado);
         resolve(resultado);
-        return "Todo bien";
       }
     });
   });

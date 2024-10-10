@@ -96,8 +96,8 @@
     <!-- Visualizador de PDF -->
     <div id="pdf-viewer">
       <h5>Visualizador de archivos PDF</h5>
-      <iframe id="pdf-frame" src="/TesisF/gemini.pdf" frameborder="0" width="100%" height="100%">
-      </iframe>
+      <iframe id="pdf-frame" src="\Documents\1728454369196-technical-design-document-final.pdf" frameborder="0"
+        width="100%" height="600px"></iframe>
       <!-- <embed src="/TDD-Equipo.pdf" type="application/pdf"> -->
     </div>
 
@@ -176,15 +176,17 @@
           commitList.appendChild(backButton);
 
           // Cargar las tesis del alumno
+          console.log("Id del alumno", alumno.numero_cuenta)
           const response = await fetch(`/api/alumnos/tesis/${alumno.numero_cuenta}`);
           const tesis = await response.json();
+          console.log(tesis)
           const tesisBodyArray = Array.isArray(tesis.body) ? tesis.body : [tesis.body];
 
           // Mostrar las tesis del alumno en la sidebar
           tesisBodyArray.forEach((tesis) => {
             const div = document.createElement("div");
             div.classList.add("tesis-item");
-            div.textContent = `Tesis: ${tesis.nombre_tesis}`;
+            div.textContent = `Tesis: ${tesis.nombre_tesis} - Numero de version: ${tesis.numero_version}`;
             div.onclick = () => {
               loadPdf(tesis, alumno);  // Cargar la tesis y el alumno
             };
@@ -200,22 +202,72 @@
     });
 
     // Función para cargar un PDF en el iframe
-    async function loadPdf(tesis, alumno) {
-      tesisData = tesis;
-      alumnoData = alumno;
-      console.log(`Mostrando información para tesis ${tesis.id}`);
-      console.log("info global tesis", tesisData);
-      console.log("info global alumnos", alumnoData);
+    async function loadPdf(tesis) {
+      console.log("archivo de tesis", tesis.archivo_pdf)
+      if (!tesis.archivo_pdf) {
+        console.error('El archivo PDF no está disponible');
+        return;
+      }
 
-      // Aquí iría el código para cargar el PDF en el iframe
+      try {
+        // Convertir el Buffer a Blob
+        const blob = new Blob([new Uint8Array(tesis.archivo_pdf.data)], { type: 'application/pdf' });
+
+        // Crear una URL para el Blob
+        const url = URL.createObjectURL(blob);
+
+        // Obtener el iframe y establecer la URL como su fuente
+        const iframe = document.getElementById('pdf-frame');
+        iframe.src = url;
+
+        // Quitar la revocación de URL por ahora
+        /*
+        iframe.onload = () => {
+          URL.revokeObjectURL(url);
+        };
+        */
+
+        console.log(`PDF cargado: ${url}`);
+      } catch (error) {
+        console.error('Error al cargar el PDF:', error);
+      }
     }
 
+    async function generateComments() {
+      // // import { GoogleAIFileManager } from "@google/generative-ai/server";
+      // const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+      // // Initialize GoogleAIFileManager with your API_KEY.
+      // const fileManager = new GoogleAIFileManager(process.env.API_KEY);
+      // // Simulación de generación de comentarios por IA
+      // // Upload the file and specify a display name.
+      // const uploadResponse = await fileManager.uploadFile("gemini.pdf", {
+      //   mimeType: "application/pdf",
+      //   displayName: "Gemini 1.5 PDF",
+      // });
+      // // View the response.
+      // console.log(`Uploaded file ${uploadResponse.file.displayName} as: ${uploadResponse.file.uri}`);
 
-    // Simulación de generación de comentarios por IA
-    function generateComments() {
-      const iaOutput = document.getElementById("ia-output");
-      iaOutput.innerHTML =
-        "<b>Comentario IA:</b> La estructura de la tesis está bien planteada, pero se recomienda mayor claridad en la redacción del capítulo 3.";
+      // // import { GoogleGenerativeAI } from "@google/generative-ai";
+      // const model = genAI.getGenerativeModel({
+      //   // Choose a Gemini model.
+      //   model: "gemini-1.5-flash",
+      // });
+
+      // // Upload file ...
+
+      // // Generate content using text and the URI reference for the uploaded file.
+      // const result = await model.generateContent([
+      //   {
+      //     fileData: {
+      //       mimeType: uploadResponse.file.mimeType,
+      //       fileUri: uploadResponse.file.uri
+      //     }
+      //   },
+      //   { text: "Can you summarize this document as a bulleted list?" },
+      // ]);
+
+      // // Output the generated text to the console
+      // console.log(result.response.text())
     }
 
     function submitComment() {

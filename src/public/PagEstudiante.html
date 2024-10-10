@@ -19,30 +19,12 @@
       border-radius: 10px;
     }
 
-<<<<<<< HEAD
     #back-button {
       position: absolute;
       top: 10px;
       left: 10px;
       cursor: pointer;
     }
-=======
-      <form id="revision-form">
-        <!-- Nombre de la tesis -->
-        <div class="form-group">
-          <label for="nombre-tesis" aria-required="true"
-            >Titulo de la tesis:</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            id="nombre-tesis"
-            name="nombre_tesis"
-            placeholder="Introduce el nombre de tu tesis"
-            required
-          />
-        </div>
->>>>>>> origin/main
 
     .form-group textarea {
       resize: none;
@@ -52,24 +34,9 @@
       margin-top: 10px;
     }
 
-<<<<<<< HEAD
     #view-comments-button {
       margin-top: 10px;
     }
-=======
-        <!-- Subir archivo PDF -->
-        <div class="form-group">
-          <label for="archivo-tesis">Subir archivo PDF de la tesis:</label>
-          <input
-            type="file"
-            name="archivo_pdf"
-            class="form-control-file"
-            id="pdfFile"
-            accept=".pdf"
-            required
-          />
-        </div>
->>>>>>> origin/main
 
     #welcome-message {
       margin: 20px 0;
@@ -87,36 +54,17 @@
   <!-- Mensaje de bienvenida -->
   <div id="welcome-message"></div>
 
-<<<<<<< HEAD
   <!-- Contenedor principal -->
   <div id="container" class="container">
     <h2 class="text-center">Solicitar Revisión de Tesis</h2>
 
-    <form id="revision-form" action="/api/tesis" method="post">
+    <form id="revision-form">
       <!-- Nombre de la tesis -->
       <div class="form-group">
         <label for="nombre-tesis" aria-required="true">Titulo de la tesis:</label>
         <input type="text" class="form-control" id="nombre-tesis" name="nombre_tesis"
           placeholder="Introduce el nombre de tu tesis" required />
       </div>
-=======
-        if (!token) {
-          console.log("No se encontró el token, redirigiendo al login.");
-          window.location.href = "/"; // Redirigir si no hay token
-          return;
-        }
-        const decodedToken = jwt_decode(token);
-        const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
-        if (decodedToken.exp < currentTime) {
-          console.log("El token ha expirado, redirigiendo al login.");
-          localStorage.removeItem("token"); // Eliminar el token
-          window.location.href = "/"; // Redirigir al login
-          return;
-        }
-        // Decodificar el token JWT (usando jwt-decode)
-        // Decodificar el token
-        const nombreUsuario = decodedToken.nombre || "Usuario"; // Asume que el token tiene el campo "nombre"
->>>>>>> origin/main
 
       <!-- Notas sobre los avances -->
       <div class="form-group">
@@ -135,7 +83,7 @@
       <!-- Subir archivo PDF -->
       <div class="form-group">
         <label for="archivo-tesis">Subir archivo PDF de la tesis:</label>
-        <input type="file" name="archivo_pdf" class="form-control-file" id="archivo-tesis" accept=".pdf" required />
+        <input type="file" name="archivo_pdf" class="form-control-file" id="pdfFile" accept=".pdf" required />
       </div>
 
       <!-- Botón para enviar solicitud -->
@@ -161,10 +109,16 @@
         window.location.href = "/"; // Redirigir si no hay token
         return;
       }
-<<<<<<< HEAD
-
+      const decodedToken = jwt_decode(token);
+      const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
+      if (decodedToken.exp < currentTime) {
+        console.log("El token ha expirado, redirigiendo al login.");
+        localStorage.removeItem("token"); // Eliminar el token
+        window.location.href = "/"; // Redirigir al login
+        return;
+      }
       // Decodificar el token JWT (usando jwt-decode)
-      const decodedToken = jwt_decode(token); // Decodificar el token
+      // Decodificar el token
       const nombreUsuario = decodedToken.nombre || "Usuario"; // Asume que el token tiene el campo "nombre"
 
       // Mostrar el nombre del usuario en la parte superior
@@ -172,116 +126,97 @@
         "welcome-message"
       ).innerText = `Bienvenido, ${nombreUsuario}`;
     }
-
     // Función del botón de regreso
     document
       .getElementById("back-button")
-      .addEventListener("click", function () {
-        window.location.href = "index.html"; // Cambiar a la ruta del menú principal
+      .addEventListener("click", async function () {
+        const token = await localStorage.getItem("token");
+        console.log("Token actual:", token); // Verifica si el token está disponible
+        if (token) {
+          await localStorage.removeItem("token"); // Elimina el token si existe
+          console.log("Token eliminado");
+        } else {
+          console.log("No se encontró token");
+        }
+        setTimeout(function () {
+          window.location.href = "index.html";
+        }, 1000); // Cambiar a la ruta del menú principal
       });
-=======
-      // Función del botón de regreso
-      document
-        .getElementById("back-button")
-        .addEventListener("click", async function () {
-          const token = await localStorage.getItem("token");
-          console.log("Token actual:", token); // Verifica si el token está disponible
-          if (token) {
-            await localStorage.removeItem("token"); // Elimina el token si existe
-            console.log("Token eliminado");
-          } else {
-            console.log("No se encontró token");
-          }
-          setTimeout(function () {
-            window.location.href = "index.html";
-          }, 1000); // Cambiar a la ruta del menú principal
-        });
-
-      // Función del botón para ver comentarios
-      function viewComments(event) {
-        event.preventDefault(); // Evita que el botón recargue la página
-        window.location.href = "PagEstudiantesVerCom.html"; // Cambiar a la página de comentarios
-      }
-      //HOLA MUNDO
-      document
-        .getElementById("revision-form")
-        .addEventListener("submit", async function (event) {
-          event.preventDefault(); // Evitar que el formulario se envíe normalmente
-          const formData = new FormData(this); // Obtener los datos del formulario
-          const data = Object.fromEntries(formData.entries()); // Convertir a un objeto
-          // Función para sanitizar datos
-          function sanitizeInput(input) {
-            const tempElement = document.createElement("div");
-            tempElement.innerText = input; // Evitar la inyección de HTML o scripts
-            return tempElement.innerHTML; // Devolver el contenido "sanitizado"
-          }
-
-          // Sanitizar cada campo del formulario antes de enviarlo
-          Object.keys(data).forEach((key) => {
-            data[key] = sanitizeInput(data[key]);
-          });
-          const token = localStorage.getItem("token");
-          const decodedToken = jwt_decode(token);
-          data.asesor_numero_cuenta = decodedToken.asesor_numero_cuenta;
-          data.alumno_numero_cuenta = decodedToken.numero_cuenta;
-          const fileInput = document.getElementById("pdfFile");
-          const file = fileInput.files[0];
-          const formDataPdf = new FormData();
-          formDataPdf.append("pdf", file);
-          try {
-            // Primer fetch: enviar la solicitud para agregar la tesis
-            const response = await fetch("/api/tesis", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data), // Convertir el objeto `data` a JSON y enviarlo
-            });
-            await fetch("/api/tesis/upload", {
-              method: "POST",
-              body: formDataPdf,
-            });
-            if (response.ok) {
-              document.getElementById("revision-form").reset();
-              alert("Solicitud de revisión y petición agregada correctamente.");
-              // Convertir la respuesta a JSON
-              const result = await response.json();
-              const tesisId = result.body.insertId; // Obtener el ID de la tesis agregada desde el resultado
-              const alumnoNumeroCuenta = decodedToken.numero_cuenta; // Obtener el número de cuenta del alumno desde el token
-              // Segundo fetch: enviar la solicitud para agregar la petición de alumno
-              const peticionData = {
-                tesis_id: tesisId, // Usar el id de la tesis anterior
-                alumno_numero_cuenta: alumnoNumeroCuenta, // Pasar el número de cuenta del alumno
-              };
-              const peticionResponse = await fetch("/api/alumnos/peticion", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`, // Enviar el token en el encabezado de autorización
-                },
-                body: JSON.stringify(peticionData), // Enviar la petición con el id de la tesis y el número de cuenta del alumno
-              });
-
-              // Manejar la respuesta del segundo fetch
-            } else {
-              alert("Error al enviar la tesis.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("Error al enviar la solicitud.");
-          }
-        });
-      // Llamar a la función cargarDatosProtegidos cuando se cargue la página
-      document.addEventListener("DOMContentLoaded", cargarDatosProtegidos);
-    </script>
->>>>>>> origin/main
 
     // Función del botón para ver comentarios
     function viewComments(event) {
       event.preventDefault(); // Evita que el botón recargue la página
       window.location.href = "PagEstudiantesVerCom.html"; // Cambiar a la página de comentarios
     }
+    //HOLA MUNDO
+    document
+      .getElementById("revision-form")
+      .addEventListener("submit", async function (event) {
+        event.preventDefault(); // Evitar que el formulario se envíe normalmente
+        const formData = new FormData(this); // Obtener los datos del formulario
+        const data = Object.fromEntries(formData.entries()); // Convertir a un objeto
+        // Función para sanitizar datos
+        function sanitizeInput(input) {
+          const tempElement = document.createElement("div");
+          tempElement.innerText = input; // Evitar la inyección de HTML o scripts
+          return tempElement.innerHTML; // Devolver el contenido "sanitizado"
+        }
 
+        // Sanitizar cada campo del formulario antes de enviarlo
+        Object.keys(data).forEach((key) => {
+          data[key] = sanitizeInput(data[key]);
+        });
+        const token = localStorage.getItem("token");
+        const decodedToken = jwt_decode(token);
+        data.asesor_numero_cuenta = decodedToken.asesor_numero_cuenta;
+        data.alumno_numero_cuenta = decodedToken.numero_cuenta;
+        const fileInput = document.getElementById("pdfFile");
+        const file = fileInput.files[0];
+        const formDataPdf = new FormData();
+        formDataPdf.append("pdf", file);
+        try {
+          // Primer fetch: enviar la solicitud para agregar la tesis
+          const response = await fetch("/api/tesis", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data), // Convertir el objeto `data` a JSON y enviarlo
+          });
+          await fetch("/api/tesis/upload", {
+            method: "POST",
+            body: formDataPdf,
+          });
+          if (response.ok) {
+            document.getElementById("revision-form").reset();
+            alert("Solicitud de revisión y petición agregada correctamente.");
+            // Convertir la respuesta a JSON
+            const result = await response.json();
+            const tesisId = result.body.insertId; // Obtener el ID de la tesis agregada desde el resultado
+            const alumnoNumeroCuenta = decodedToken.numero_cuenta; // Obtener el número de cuenta del alumno desde el token
+            // Segundo fetch: enviar la solicitud para agregar la petición de alumno
+            const peticionData = {
+              tesis_id: tesisId, // Usar el id de la tesis anterior
+              alumno_numero_cuenta: alumnoNumeroCuenta, // Pasar el número de cuenta del alumno
+            };
+            const peticionResponse = await fetch("/api/alumnos/peticion", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`, // Enviar el token en el encabezado de autorización
+              },
+              body: JSON.stringify(peticionData), // Enviar la petición con el id de la tesis y el número de cuenta del alumno
+            });
+
+            // Manejar la respuesta del segundo fetch
+          } else {
+            alert("Error al enviar la tesis.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error al enviar la solicitud.");
+        }
+      });
     // Llamar a la función cargarDatosProtegidos cuando se cargue la página
     document.addEventListener("DOMContentLoaded", cargarDatosProtegidos);
   </script>
